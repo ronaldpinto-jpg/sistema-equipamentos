@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sistema para cadastro e gerenciamento de equipamentos de informática.">
+  <meta name="theme-color" content="#111827">
+  <title>EquipTrack | Gerenciador de equipamentos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="EquipTrack página inicial">
+        <span class="brand__icon">E</span><span>Equip<span class="brand__accent">Track</span></span>
+      </a>
+      <p class="sidebar__label">MENU PRINCIPAL</p>
+      <nav class="nav" aria-label="Navegação principal">
+        <a class="nav__link nav__link--active" href="#dashboard" data-view="dashboard"><span>▦</span> Visão geral</a>
+        <a class="nav__link" href="#equipamentos" data-view="equipamentos"><span>▣</span> Equipamentos</a>
+        <a class="nav__link" href="#cadastro" data-view="cadastro"><span>＋</span> Cadastrar equipamento</a>
+      </nav>
+      <div class="sidebar__bottom">
+        <div class="help-card">
+          <span class="help-card__icon">ⓘ</span>
+          <strong>Precisa de ajuda?</strong>
+          <p>Gerencie os equipamentos da empresa em um só lugar.</p>
+        </div>
+        <p class="sidebar__version">EquipTrack · Versão 1.0</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-button menu-toggle" id="menuToggle" aria-label="Abrir menu">☰</button>
+        <div class="breadcrumb">Workspace <span>/</span> <strong id="breadcrumbCurrent">Visão geral</strong></div>
+        <div class="topbar__right">
+          <span class="status-dot"></span><span class="topbar__status">Sistema local</span>
+          <div class="avatar" aria-label="Usuário administrador">AD</div>
+        </div>
+      </header>
+
+      <section class="page page--active" id="view-dashboard" aria-labelledby="pageTitle">
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">PAINEL DE CONTROLE</p>
+            <h1 id="pageTitle">Visão geral</h1>
+            <p class="muted">Acompanhe o inventário de equipamentos de informática.</p>
+          </div>
+          <button class="button button--primary" data-go="cadastro"><span>＋</span> Novo equipamento</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-card__top"><span class="stat-card__label">Total de equipamentos</span><span class="stat-icon stat-icon--blue">▣</span></div>
+            <strong class="stat-card__number" id="statTotal">0</strong><span class="stat-card__note">Itens cadastrados</span>
+          </article>
+          <article class="stat-card">
+            <div class="stat-card__top"><span class="stat-card__label">Disponíveis</span><span class="stat-icon stat-icon--green">✓</span></div>
+            <strong class="stat-card__number" id="statAvailable">0</strong><span class="stat-card__note"><span class="mini-dot mini-dot--green"></span> Prontos para uso</span>
+          </article>
+          <article class="stat-card">
+            <div class="stat-card__top"><span class="stat-card__label">Emprestados</span><span class="stat-icon stat-icon--orange">↗</span></div>
+            <strong class="stat-card__number" id="statLoaned">0</strong><span class="stat-card__note"><span class="mini-dot mini-dot--orange"></span> Em uso externo</span>
+          </article>
+          <article class="stat-card">
+            <div class="stat-card__top"><span class="stat-card__label">Em manutenção</span><span class="stat-icon stat-icon--purple">⚙</span></div>
+            <strong class="stat-card__number" id="statMaintenance">0</strong><span class="stat-card__note">Precisam de atenção</span>
+          </article>
+        </div>
+
+        <section class="panel">
+          <div class="panel__heading">
+            <div><h2>Equipamentos recentes</h2><p class="muted">Últimos itens adicionados ao inventário.</p></div>
+            <button class="button button--light button--small" data-go="equipamentos">Ver todos <span>→</span></button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Equipamento</th><th>Patrimônio</th><th>Categoria</th><th>Status</th><th></th></tr></thead>
+              <tbody id="recentTableBody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="recentEmpty"><span class="empty-state__icon">▣</span><strong>Nenhum equipamento cadastrado</strong><p>Comece adicionando o primeiro item ao inventário.</p><button class="button button--primary" data-go="cadastro">Cadastrar equipamento</button></div>
+        </section>
+        <footer class="footer">© 2026 EquipTrack · Gerenciamento de patrimônio de TI</footer>
+      </section>
+
+      <section class="page" id="view-equipamentos" aria-labelledby="equipmentTitle">
+        <div class="page-heading">
+          <div><p class="eyebrow">INVENTÁRIO</p><h1 id="equipmentTitle">Equipamentos</h1><p class="muted">Consulte, pesquise e atualize seus equipamentos.</p></div>
+          <button class="button button--primary" data-go="cadastro"><span>＋</span> Novo equipamento</button>
+        </div>
+        <section class="panel">
+          <div class="toolbar">
+            <label class="search-box"><span>⌕</span><input type="search" id="searchInput" placeholder="Buscar por nome, marca ou patrimônio..." aria-label="Pesquisar equipamentos"></label>
+            <select id="statusFilter" aria-label="Filtrar por status"><option value="">Todos os status</option><option>Disponível</option><option>Emprestado</option><option>Em manutenção</option></select>
+            <select id="categoryFilter" aria-label="Filtrar por categoria"><option value="">Todas as categorias</option><option>Computador</option><option>Notebook</option><option>Monitor</option><option>Periférico</option><option>Rede</option><option>Impressora</option><option>Outro</option></select>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Equipamento</th><th>Patrimônio</th><th>Categoria</th><th>Localização</th><th>Status</th><th>Ações</th></tr></thead>
+              <tbody id="equipmentTableBody"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="equipmentEmpty" hidden><span class="empty-state__icon">⌕</span><strong>Nenhum resultado encontrado</strong><p>Tente mudar os filtros ou cadastrar um equipamento.</p></div>
+          <div class="table-footer"><span id="resultsCount">0 equipamentos</span><button class="text-button" id="clearFilters">Limpar filtros</button></div>
+        </section>
+        <footer class="footer">Os dados ficam salvos neste navegador usando LocalStorage.</footer>
+      </section>
+
+      <section class="page" id="view-cadastro" aria-labelledby="formTitle">
+        <div class="page-heading">
+          <div><p class="eyebrow">INVENTÁRIO</p><h1 id="formTitle">Cadastrar equipamento</h1><p class="muted">Preencha as informações para registrar um novo item.</p></div>
+          <button class="button button--light" data-go="equipamentos">← Voltar para lista</button>
+        </div>
+        <form class="panel form-panel" id="equipmentForm">
+          <input type="hidden" id="equipmentId">
+          <div class="form-section-title"><span class="form-section-title__icon">▣</span><div><h2>Informações do equipamento</h2><p class="muted">Os campos marcados com * são obrigatórios.</p></div></div>
+          <div class="form-grid">
+            <div class="field field--full"><label for="name">Nome do equipamento *</label><input id="name" name="name" required maxlength="80" placeholder="Ex.: Notebook Dell Latitude"></div>
+            <div class="field"><label for="assetTag">Número de patrimônio *</label><input id="assetTag" name="assetTag" required maxlength="30" placeholder="Ex.: TI-001"></div>
+            <div class="field"><label for="category">Categoria *</label><select id="category" name="category" required><option value="">Selecione uma categoria</option><option>Computador</option><option>Notebook</option><option>Monitor</option><option>Periférico</option><option>Rede</option><option>Impressora</option><option>Outro</option></select></div>
+            <div class="field"><label for="brand">Marca</label><input id="brand" name="brand" maxlength="50" placeholder="Ex.: Dell, Lenovo, HP"></div>
+            <div class="field"><label for="model">Modelo</label><input id="model" name="model" maxlength="60" placeholder="Ex.: Latitude 5440"></div>
+            <div class="field"><label for="location">Localização</label><input id="location" name="location" maxlength="60" placeholder="Ex.: Sala de TI"></div>
+            <div class="field"><label for="status">Situação *</label><select id="status" name="status" required><option>Disponível</option><option>Emprestado</option><option>Em manutenção</option></select></div>
+            <div class="field field--full"><label for="notes">Observações</label><textarea id="notes" name="notes" rows="3" maxlength="300" placeholder="Detalhes adicionais sobre o equipamento..."></textarea></div>
+          </div>
+          <div class="form-actions"><button class="button button--light" type="button" id="cancelForm">Cancelar</button><button class="button button--primary" type="submit" id="saveButton">Salvar equipamento <span>→</span></button></div>
+        </form>
+        <footer class="footer">Confira os dados antes de salvar o registro.</footer>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog class="confirm-dialog" id="deleteDialog">
+    <div class="confirm-dialog__icon">!</div><h2>Excluir equipamento?</h2>
+    <p>Esta ação não pode ser desfeita. O registro será removido deste navegador.</p>
+    <div class="confirm-dialog__actions"><button class="button button--light" id="cancelDelete">Cancelar</button><button class="button button--danger" id="confirmDelete">Excluir registro</button></div>
+  </dialog>
+</body>
+</html>
